@@ -22,6 +22,10 @@ const RESERVED_PROPS = {
 
 let specialPropKeyWarningShown, specialPropRefWarningShown;
 
+/**
+ * ref 验证
+ * @param {*} config 
+ */
 function hasValidRef(config) {
   if (__DEV__) {
     if (hasOwnProperty.call(config, 'ref')) {
@@ -34,6 +38,10 @@ function hasValidRef(config) {
   return config.ref !== undefined;
 }
 
+/**
+ * key 验证
+ * @param {*} config 
+ */
 function hasValidKey(config) {
   if (__DEV__) {
     if (hasOwnProperty.call(config, 'key')) {
@@ -156,6 +164,11 @@ const ReactElement = function(type, key, ref, self, source, owner, props) {
       value: source,
     });
     if (Object.freeze) {
+      // 冻结对象
+      // 冻结对象不能修改、删除已有属性，不能添加新属性，
+      // 不能修改该对象已有属性的可枚举性、可配置性、可写性
+      // 该对象原型也不能被修改
+      // 扩展了解：Object.seal()、Object.preventExtensions()
       Object.freeze(element.props);
       Object.freeze(element);
     }
