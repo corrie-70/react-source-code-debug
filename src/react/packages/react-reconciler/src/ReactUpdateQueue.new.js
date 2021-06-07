@@ -151,6 +151,7 @@ if (__DEV__) {
 
 export function initializeUpdateQueue<State>(fiber: Fiber): void {
   const queue: UpdateQueue<State> = {
+    // 本次更新前该Fiber节点的state
     baseState: fiber.memoizedState,
     firstBaseUpdate: null,
     lastBaseUpdate: null,

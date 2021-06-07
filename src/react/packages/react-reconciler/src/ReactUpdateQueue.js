@@ -194,10 +194,16 @@ export function createUpdate(expirationTime: ExpirationTime): Update<*> {
   return {
     expirationTime: expirationTime,
 
+    // 更新类型 ：UpdateState | ReplaceState | ForceUpdate | CaptureUpdate
     tag: UpdateState,
+    // 更新挂载的数据
+    // 对于类组件，该值为this.setState 的第一个参数
+    // 对于HostRoot，该值为ReactDom.render的第一个参数
     payload: null,
+    // 更新的回调函数
     callback: null,
 
+    // 与其他update连接形成链表
     next: null,
     nextEffect: null,
   };
