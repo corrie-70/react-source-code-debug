@@ -41,8 +41,6 @@ class App extends React.Component {
     }
 }
 
-const t = ReactDOM.render(
+ReactDOM.render(
     <App />,
     document.getElementById('root'));
-
-console.log('t', t)

@@ -1144,6 +1144,11 @@ function completeUnitOfWork(workInProgress: Fiber): Fiber | null {
   return null;
 }
 
+/**
+ * 创建下一个fiber节点并赋值给workInProgress，并将workInProgress与已创建的fiber节点连接构成fiber树
+ * @param {*} workInProgress 
+ * @returns 
+ */
 function performUnitOfWork(workInProgress: Fiber): Fiber | null {
   // The current, flushed, state of this fiber is the alternate.
   // Ideally nothing should rely on this, but relying on it here
@@ -1197,6 +1202,7 @@ function performUnitOfWork(workInProgress: Fiber): Fiber | null {
   }
 
   if (next === null) {
+    // 遍历到叶子节点，执行completeUnitOfWork
     // If this doesn't spawn new work, complete the current work.
     next = completeUnitOfWork(workInProgress);
   }
@@ -2348,6 +2354,12 @@ function finishRendering() {
   }
 }
 
+/**
+ * mount时创建节点并将节点渲染到DOM上，称为一次work
+ * @param {*} root 
+ * @param {*} expirationTime 
+ * @param {*} isYieldy 
+ */
 function performWorkOnRoot(
   root: FiberRoot,
   expirationTime: ExpirationTime,
@@ -2405,6 +2417,7 @@ function performWorkOnRoot(
         // $FlowFixMe Complains noTimeout is not a TimeoutID, despite the check above
         cancelTimeout(timeoutHandle);
       }
+      // 创建子节点并挂载到root变量
       renderRoot(root, isYieldy);
       finishedWork = root.finishedWork;
       if (finishedWork !== null) {
@@ -2412,6 +2425,7 @@ function performWorkOnRoot(
         // before committing.
         if (!shouldYieldToRenderer()) {
           // Still time left. Commit the root.
+          // commit 阶段，渲染root变量节点
           completeRoot(root, finishedWork, expirationTime);
         } else {
           // There's no time left. Mark this root as complete. We'll come

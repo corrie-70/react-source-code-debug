@@ -539,6 +539,13 @@ if (supportsMutation) {
   };
 }
 
+/**
+ * 给有effectTag的fiber节点执行相应操作
+ * @param {*} current 
+ * @param {*} workInProgress 
+ * @param {*} renderExpirationTime 
+ * @returns 
+ */
 function completeWork(
   current: Fiber | null,
   workInProgress: Fiber,

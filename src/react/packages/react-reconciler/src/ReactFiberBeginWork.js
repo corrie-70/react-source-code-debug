@@ -1890,6 +1890,13 @@ function bailoutOnAlreadyFinishedWork(
   }
 }
 
+/**
+ * 根据当前传入的fiber节点，创建子fiber节点
+ * @param {*} current 
+ * @param {*} workInProgress 
+ * @param {*} renderExpirationTime 
+ * @returns 
+ */
 function beginWork(
   current: Fiber | null,
   workInProgress: Fiber,
