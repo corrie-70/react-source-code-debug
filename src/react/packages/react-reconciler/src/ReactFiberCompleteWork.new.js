@@ -854,11 +854,13 @@ function completeWork(
       bubbleProperties(workInProgress);
       return null;
     }
+    /** 原生DOM组件对应的fiber节点 */
     case HostComponent: {
       popHostContext(workInProgress);
       const rootContainerInstance = getRootHostContainer();
       const type = workInProgress.type;
       if (current !== null && workInProgress.stateNode != null) {
+        // update 情况
         updateHostComponent(
           current,
           workInProgress,
@@ -871,6 +873,7 @@ function completeWork(
           markRef(workInProgress);
         }
       } else {
+        // mount情况
         if (!newProps) {
           invariant(
             workInProgress.stateNode !== null,
@@ -903,6 +906,7 @@ function completeWork(
             markUpdate(workInProgress);
           }
         } else {
+          // 为fiber创建对应DOM节点
           const instance = createInstance(
             type,
             newProps,
@@ -910,9 +914,9 @@ function completeWork(
             currentHostContext,
             workInProgress,
           );
-
+          // 将子孙DOM节点插入刚生成的DOM节点中
           appendAllChildren(instance, workInProgress, false, false);
-
+          // DOM节点复制给fiber.stateNode   
           workInProgress.stateNode = instance;
 
           // Certain renderers require commit-time effects for initial mount.
