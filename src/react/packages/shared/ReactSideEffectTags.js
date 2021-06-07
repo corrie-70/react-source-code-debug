@@ -14,9 +14,13 @@ export const NoEffect = /*              */ 0b000000000000;
 export const PerformedWork = /*         */ 0b000000000001;
 
 // You can change the rest (and add more).
+/** DOM需要插入到页面中 */
 export const Placement = /*             */ 0b000000000010;
+/** DOM需要更新 */
 export const Update = /*                */ 0b000000000100;
+/** DOM需要插入到页面中并更新 */
 export const PlacementAndUpdate = /*    */ 0b000000000110;
+/** DOM需要删除 */
 export const Deletion = /*              */ 0b000000001000;
 export const ContentReset = /*          */ 0b000000010000;
 export const Callback = /*              */ 0b000000100000;

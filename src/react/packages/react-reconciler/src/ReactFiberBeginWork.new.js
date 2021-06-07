@@ -231,6 +231,15 @@ if (__DEV__) {
   didWarnAboutDefaultPropsOnFunctionComponent = {};
 }
 
+/**
+ * 对于mount的组件，创建新的子fiber节点
+ * 对于update组件，比较当前组件与上次更新时该组件fiber节点，即diff算法
+ * 将比较结果生成新的fiber节点
+ * @param {*} current 
+ * @param {*} workInProgress 
+ * @param {*} nextChildren 
+ * @param {*} renderLanes 
+ */
 export function reconcileChildren(
   current: Fiber | null,
   workInProgress: Fiber,
@@ -3074,6 +3083,13 @@ function remountFiber(
   }
 }
 
+/**
+ * 根据传入的fiber节点创建子fiber节点，并将这两个fiber节点连接起来
+ * @param {*} current 当前组件对应的fiber节点在上次更新时的fiber节点，即workInProgress.alternate
+ * @param {*} workInProgress 当前组件对应的fiber节点
+ * @param {*} renderLanes 优先级相关
+ * @returns 
+ */
 function beginWork(
   current: Fiber | null,
   workInProgress: Fiber,
@@ -3099,6 +3115,8 @@ function beginWork(
     }
   }
 
+  // 不为空，此次调用属于update，为空则为mount，第一次挂载
+  // 如果current存在优化路径，可以复用current
   if (current !== null) {
     const oldProps = current.memoizedProps;
     const newProps = workInProgress.pendingProps;
@@ -3113,6 +3131,7 @@ function beginWork(
       // This may be unset if the props are determined to be equal later (memo).
       didReceiveUpdate = true;
     } else if (!includesSomeLane(renderLanes, updateLanes)) {
+      // 当前fiber的优先级不够
       didReceiveUpdate = false;
       // This fiber does not have any pending work. Bailout without entering
       // the begin phase. There's still some bookkeeping we that needs to be done
@@ -3277,6 +3296,7 @@ function beginWork(
           return updateOffscreenComponent(current, workInProgress, renderLanes);
         }
       }
+      // 复用current
       return bailoutOnAlreadyFinishedWork(current, workInProgress, renderLanes);
     } else {
       if ((current.flags & ForceUpdateForLegacySuspense) !== NoFlags) {
@@ -3301,7 +3321,7 @@ function beginWork(
   // sometimes bails out later in the begin phase. This indicates that we should
   // move this assignment out of the common path and into each branch.
   workInProgress.lanes = NoLanes;
-
+  // 为mount时，或者update时不能复用current的情况，根据tag不同，创建不同的fiber节点
   switch (workInProgress.tag) {
     case IndeterminateComponent: {
       return mountIndeterminateComponent(
