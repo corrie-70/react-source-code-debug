@@ -394,6 +394,13 @@ function resetStack() {
   nextUnitOfWork = null;
 }
 
+/**
+ * 遍历nextEffect
+ * 对每个fiber节点执行如下三个操作
+ * 1. 根据effectTag重置文字节点
+ * 2. 更新ref
+ * 3. 根据effectTag分别处理
+ */
 function commitAllHostEffects() {
   while (nextEffect !== null) {
     if (__DEV__) {
@@ -2394,9 +2401,11 @@ function performWorkOnRoot(
         // $FlowFixMe Complains noTimeout is not a TimeoutID, despite the check above
         cancelTimeout(timeoutHandle);
       }
+      // 创建子节点并挂载到root变量
       renderRoot(root, isYieldy);
       finishedWork = root.finishedWork;
       if (finishedWork !== null) {
+        // commit 阶段，渲染root变量节点
         // We've completed the root. Commit it.
         completeRoot(root, finishedWork, expirationTime);
       }
@@ -2416,16 +2425,14 @@ function performWorkOnRoot(
         root.timeoutHandle = noTimeout;
         // $FlowFixMe Complains noTimeout is not a TimeoutID, despite the check above
         cancelTimeout(timeoutHandle);
-      }
-      // 创建子节点并挂载到root变量
+      }      
       renderRoot(root, isYieldy);
       finishedWork = root.finishedWork;
       if (finishedWork !== null) {
         // We've completed the root. Check the if we should yield one more time
         // before committing.
         if (!shouldYieldToRenderer()) {
-          // Still time left. Commit the root.
-          // commit 阶段，渲染root变量节点
+          // Still time left. Commit the root.          
           completeRoot(root, finishedWork, expirationTime);
         } else {
           // There's no time left. Mark this root as complete. We'll come
